@@ -8,20 +8,20 @@
 $pikachu = [
   'pv' => 25,
   'attaque' => 15,
-  'defense' => 10
+  'defense' => 5
 ];
 // Bulbizarre
 
 $bulbizarre = [
   'pv' => 30,
   'attaque' => 8,
-  'defense' => 20
+  'defense' => 10
 ];
 $tour = 0;
-
+echo "Date : " . date('d/m/Y : H:i:s');
 do {
 
-echo "<h2>Tour : " .++$tour . "</h2>";
+echo "<h2>Tour : " .++$tour . " à " . date('H:i:s') . "</h2>";
 
 // pikachu attaque bulbizarre
 echo "<p>Pikachu attaque bulbizarre</p>";
@@ -63,7 +63,7 @@ if ($bulbizarre['pv'] <= 0) // S'il n'y a pas d'accolades après un if, seule la
 if ($pikachu['pv'] <= 0)
   echo "<p>Pikachu est KO !</p>";
 
-
+sleep(1);
 
 
 } while ($pikachu['pv'] > 0 && $bulbizarre['pv'] > 0);
