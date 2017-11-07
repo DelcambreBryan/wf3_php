@@ -3,6 +3,7 @@
  * Bienvenue dans ce module PHP
  * Nous allons travailler à la réalisation d'un pokedex
  */
+include_once('fonction.php');
 // Initialisation des variables
 // Mes pokemons
 $pokemons = array();
@@ -28,35 +29,6 @@ $salameche = [
   'defense' => 15
 ];
 $pokemons['Salameche'] = $salameche;
-echo '
-  <script type="text/javascript">
-    var pokemons = [];
-';
-foreach($pokemons as $pokemon => $stats) {
-  echo 'pokemons["' . $pokemon . '"] = [];' . "\n";
-  foreach ($stats as $cle => $valeur) {
-    echo 'pokemons["' . $pokemon . '"]["' . $cle . '"] = ' . $valeur . "\n";
-  }
-}
-echo '
-  function changePokemon1(event) {
-    selPokemon = $(this).val();
-    $("[name=\'pv_pokemon1\']").val(pokemons[selPokemon]["pv"]);
-    $("[name=\'defense_pokemon1\']").val(pokemons[selPokemon]["defense"]);
-    $("[name=\'attaque_pokemon1\']").val(pokemons[selPokemon]["attaque"]);
-  }
-  function changePokemon2(event) {
-    selPokemon = $(this).val();
-    $("[name=\'pv_pokemon2\']").val(pokemons[selPokemon]["pv"]);
-    $("[name=\'defense_pokemon2\']").val(pokemons[selPokemon]["defense"]);
-    $("[name=\'attaque_pokemon2\']").val(pokemons[selPokemon]["attaque"]);
-  }
-  $(document).ready(function() {
-    $("#pokemon1").on("change", changePokemon1);
-    $("#pokemon2").on("change", changePokemon2);
-  });
-  </script>
-';
 // tableau de validation
 $form_error = [];
 // Validation du formulaire
@@ -96,36 +68,12 @@ $pokemon2["pv"] = $_GET['pv_pokemon2'];
 $pokemon2["defense"] = $_GET['defense_pokemon2'];
 $pokemon2["attaque"] = $_GET['attaque_pokemon2'];
 echo "<h2>$nom_pokemon1 affronte $nom_pokemon2</h2>";
-//echo "Date : " . date('d/m/Y : H:i:s');
-function attaque($nom_pokemon1, &$pokemon1, $nom_pokemon2, &$pokemon2) {
-  // pokemon1 attaque pokemon2
-  echo "<h3>$nom_pokemon1 attaque $nom_pokemon2</h3>";
-  if ($pokemon1['attaque'] >= $pokemon2['defense']) {
-    // L'attaque est supérieure à la défense : pokemon1 touche
-    $coup = $pokemon1['attaque'] - $pokemon2['defense'] + 1; // La valeur du coup est la différence entre l'attaque et la défense
-    $pokemon2['pv'] -= $coup;
-    echo "<p>$nom_pokemon2 perd $coup PV, il lui reste " . $pokemon2['pv'] . " PV</p>";
-  } else {
-    // La défense est supérieure à l'attaque, pokemon1 prend la moitié du coup et la défense baisse un peu
-    $coup = ($pokemon2['defense'] - $pokemon1['attaque']) / 2;
-    $pokemon1['pv'] -= $coup;
-    $pokemon2['defense'] -= 1;
-    echo "<p>$nom_pokemon2 perd 1 Points de défense, il lui reste " . $pokemon2['defense'] . " Points de défense</p>";
-    echo "<p>$nom_pokemon1 râte son attaque ! Il perd $coup Points de vie, il lui reste " . $pokemon1['pv'] . " Points de vie</p>";
-  }
-  if ($pokemon2['pv'] <= 0) // S'il n'y a pas d'accolades après un if, seule la première instruction est filtrée par le if
-    echo "<p>$nom_pokemon2 est KO !</p>";
-  if ($pokemon1['pv'] <= 0)
-    echo "<p>$nom_pokemon1 est KO !</p>";
-}
 // Boucle de combat
 do {
-  echo "<h2> Tour : " . ++$tour . " à " . date('H:i:s') . "</h2>";
   // attaque
   attaque($nom_pokemon1, $pokemon1, $nom_pokemon2, $pokemon2);
   if ($pokemon2['pv'] <= 0)
     break;
-  
   // contre attaque
   attaque($nom_pokemon2, $pokemon2, $nom_pokemon1, $pokemon1);
 } while ($pokemon1['pv'] > 0 && $pokemon2['pv'] > 0); // === !($pikachu['pv'] <= 0 || $bulbizarre['pv'] <= 0)
